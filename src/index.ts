@@ -43,7 +43,7 @@ export default class Perspective {
   // Context for transformed image
   private ctxt: CanvasRenderingContext2D;
 
-  constructor(ctxd: CanvasRenderingContext2D, image: HTMLImageElement) {
+  constructor(ctxd: CanvasRenderingContext2D, image: CanvasImageSource) {
     // check the arguments
     if (!ctxd || !ctxd.strokeStyle) {
       return;
@@ -53,8 +53,8 @@ export default class Perspective {
     }
     // prepare a <canvas> for the image
     let cvso = document.createElement("canvas");
-    cvso.width = Math.round(image.width);
-    cvso.height = Math.round(image.height);
+    cvso.width = Math.round(typeof image.width === "number" ? image.width : image.width.baseVal.value);
+    cvso.height = Math.round(typeof image.height === "number" ? image.height : image.height.baseVal.value);
     let ctxo = cvso.getContext("2d");
     ctxo.drawImage(image, 0, 0, cvso.width, cvso.height);
     // prepare a <canvas> for the transformed image
