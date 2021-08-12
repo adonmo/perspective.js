@@ -180,8 +180,8 @@ export default class Perspective {
     }
     // set a clipping path and draw the transformed image on the destination canvas.
     this.ctxd.save();
+    this._applyClipPath(this.ctxd, q);
     this.ctxd.drawImage(ctxt.canvas, 0, 0);
-    this._applyMask(this.ctxd, q);
     this.ctxd.restore();
   }
 
@@ -193,15 +193,13 @@ export default class Perspective {
     return ctx;
   }
 
-  private _applyMask(ctx: CanvasRenderingContext2D, q: Quadrilateral) {
+  private _applyClipPath(ctx: CanvasRenderingContext2D, q: Quadrilateral) {
     ctx.beginPath();
     ctx.moveTo(q.topLeftX, q.topLeftY);
     ctx.lineTo(q.topRightX, q.topRightY);
     ctx.lineTo(q.bottomRightX, q.bottomRightY);
     ctx.lineTo(q.bottomLeftX, q.bottomLeftY);
     ctx.closePath();
-    ctx.globalCompositeOperation = "destination-in";
-    ctx.fill();
-    ctx.globalCompositeOperation = "source-over";
+    ctx.clip();
   }
 }
