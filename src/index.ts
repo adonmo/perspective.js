@@ -133,7 +133,7 @@ export default class Perspective {
     const step = 2;
     const cover_step = step * 5;
     //
-    const { originalCanvas, transformedContext } = this;
+    const { originalCanvas, transformedContext, destinationContext } = this;
     transformedContext.clearRect(0, 0, transformedContext.canvas.width, transformedContext.canvas.height);
     if (base_index % 2 == 0) {
       // top or bottom side
@@ -165,10 +165,10 @@ export default class Perspective {
       }
     }
     // set a clipping path and draw the transformed image on the destination canvas.
-    this.destinationContext.save();
-    this.destinationContext.drawImage(transformedContext.canvas, 0, 0);
-    this._applyMask(this.destinationContext, q);
-    this.destinationContext.restore();
+    destinationContext.save();
+    destinationContext.drawImage(transformedContext.canvas, 0, 0);
+    this._applyMask(destinationContext, q);
+    destinationContext.restore();
   }
 
   private _applyMask(ctx: CanvasRenderingContext2D, q: Quadrilateral) {
