@@ -55,21 +55,16 @@ export default class Perspective {
     if (!destinationContext || !destinationContext.strokeStyle || !image || !image.width || !image.height) {
       throw new Error("Invalid arguments");
     }
+    this.destinationContext = destinationContext;
     // prepare a <canvas> for the image
     const cvso = document.createElement("canvas");
     cvso.width = Math.round(image.width);
     cvso.height = Math.round(image.height);
     const ctxo = cvso.getContext("2d");
     ctxo.drawImage(image, 0, 0, cvso.width, cvso.height);
-    // prepare a <canvas> for the transformed image
-    const cvst = document.createElement("canvas");
-    cvst.width = destinationContext.canvas.width;
-    cvst.height = destinationContext.canvas.height;
-    const ctxt = cvst.getContext("2d");
-
-    this.destinationContext = destinationContext;
     this.originalCanvas = cvso;
-    this.transformedContext = ctxt;
+    // prepare a <canvas> for the transformed image
+    this.transformedContext = createCanvasContext(destinationContext.canvas.width, destinationContext.canvas.height);
   }
 
   draw(q: Quadrilateral) {
