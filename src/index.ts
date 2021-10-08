@@ -139,7 +139,7 @@ export default class Perspective {
     this.transformedContext = createCanvasContext(destinationContext.canvas.width, destinationContext.canvas.height);
   }
 
-  public draw(q: Quadrilateral): void {
+  public draw(q: Quadrilateral, step = 2): void {
     const {
       topLeftX,
       topLeftY,
@@ -177,20 +177,17 @@ export default class Perspective {
     if (zero_num > 1) {
       return;
     }
-    //
-    const step = 2;
-    const cover_step = step * 5;
-    //
+    const coverStep = step * 5;
     const { originalCanvas, transformedContext, destinationContext } = this;
     transformedContext.clearRect(0, 0, transformedContext.canvas.width, transformedContext.canvas.height);
     if (base_index % 2 == 0) {
       // top or bottom side
-      const ctxl = createCanvasContext(width, cover_step);
+      const ctxl = createCanvasContext(width, coverStep);
       ctxl.globalCompositeOperation = "copy";
       drawSlices(originalCanvas, ctxl, transformedContext, true, width, height, step, topLeftX, bottomLeftX, topLeftY, bottomLeftY, topRightX, bottomRightX, topRightY, bottomRightY);
     } else {
       // right or left side
-      const ctxl = createCanvasContext(cover_step, height);
+      const ctxl = createCanvasContext(coverStep, height);
       ctxl.globalCompositeOperation = "copy";
       drawSlices(originalCanvas, ctxl, transformedContext, false, width, height, step, topLeftX, topRightX, topLeftY, topRightY, bottomLeftX, bottomRightX, bottomLeftY, bottomRightY);
     }
