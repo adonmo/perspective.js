@@ -39,6 +39,26 @@ function createCanvasContext(width: number, height: number): CanvasRenderingCont
   return canvas.getContext("2d")!;
 }
 
+function applyMask(ctx: CanvasRenderingContext2D, {
+  bottomLeftX,
+  bottomLeftY,
+  bottomRightX,
+  bottomRightY,
+  topLeftX,
+  topLeftY,
+  topRightX,
+  topRightY
+}: Quadrilateral): void {
+  ctx.beginPath();
+  ctx.moveTo(topLeftX, topLeftY);
+  ctx.lineTo(topRightX, topRightY);
+  ctx.lineTo(bottomRightX, bottomRightY);
+  ctx.lineTo(bottomLeftX, bottomLeftY);
+  ctx.closePath();
+  ctx.globalCompositeOperation = "destination-in";
+  ctx.fill();
+  ctx.globalCompositeOperation = "source-over";
+}
 
 function drawSlice(
   originalCanvas: HTMLCanvasElement,
@@ -167,19 +187,7 @@ export default class Perspective {
     // set a clipping path and draw the transformed image on the destination canvas.
     destinationContext.save();
     destinationContext.drawImage(transformedContext.canvas, 0, 0);
-    this._applyMask(destinationContext, q);
+    applyMask(destinationContext, q);
     destinationContext.restore();
-  }
-
-  private _applyMask(ctx: CanvasRenderingContext2D, q: Quadrilateral) {
-    ctx.beginPath();
-    ctx.moveTo(q.topLeftX, q.topLeftY);
-    ctx.lineTo(q.topRightX, q.topRightY);
-    ctx.lineTo(q.bottomRightX, q.bottomRightY);
-    ctx.lineTo(q.bottomLeftX, q.bottomLeftY);
-    ctx.closePath();
-    ctx.globalCompositeOperation = "destination-in";
-    ctx.fill();
-    ctx.globalCompositeOperation = "source-over";
   }
 }
