@@ -19,7 +19,7 @@ This file was modified by Fabien LOISON <http://www.flozz.fr/>
 This file was further modified by Adonmo https://www.adonmo.com/
 */
 
-interface Quadrilateral {
+export interface Quadrilateral {
   topLeftX: number;
   topLeftY: number;
   topRightX: number;
@@ -67,7 +67,7 @@ export default class Perspective {
     this.transformedContext = createCanvasContext(destinationContext.canvas.width, destinationContext.canvas.height);
   }
 
-  draw(q: Quadrilateral) {
+  public draw(q: Quadrilateral): void {
     const {
       topLeftX,
       topLeftY,
