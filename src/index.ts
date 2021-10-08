@@ -32,20 +32,20 @@ interface Quadrilateral {
 
 export default class Perspective {
   // Context for destination (output will go here)
-  private ctxd: CanvasRenderingContext2D;
+  private readonly destinationContext: CanvasRenderingContext2D;
 
   // Canvas for original image
-  private cvso: HTMLCanvasElement;
+  private readonly originalCanvas: HTMLCanvasElement;
 
   // Context for original image
-  private ctxo: CanvasRenderingContext2D;
+  private readonly originalContext: CanvasRenderingContext2D;
 
   // Context for transformed image
-  private ctxt: CanvasRenderingContext2D;
+  private readonly transformedContext: CanvasRenderingContext2D;
 
-  constructor(ctxd: CanvasRenderingContext2D, image: HTMLImageElement) {
+  constructor(destinationContext: CanvasRenderingContext2D, image: HTMLImageElement) {
     // check the arguments
-    if (!ctxd || !ctxd.strokeStyle || !image || !image.width || !image.height) {
+    if (!destinationContext || !destinationContext.strokeStyle || !image || !image.width || !image.height) {
       throw new Error("Invalid arguments");
     }
     // prepare a <canvas> for the image
@@ -56,14 +56,14 @@ export default class Perspective {
     ctxo.drawImage(image, 0, 0, cvso.width, cvso.height);
     // prepare a <canvas> for the transformed image
     const cvst = document.createElement("canvas");
-    cvst.width = ctxd.canvas.width;
-    cvst.height = ctxd.canvas.height;
+    cvst.width = destinationContext.canvas.width;
+    cvst.height = destinationContext.canvas.height;
     const ctxt = cvst.getContext("2d");
 
-    this.ctxd = ctxd;
-    this.cvso = cvso;
-    this.ctxo = ctxo;
-    this.ctxt = ctxt;
+    this.destinationContext = destinationContext;
+    this.originalCanvas = cvso;
+    this.originalContext = ctxo;
+    this.transformedContext = ctxt;
   }
 
   draw(q: Quadrilateral) {
@@ -97,8 +97,8 @@ export default class Perspective {
       ), // left side
     ];
     //
-    const ow = this.cvso.width;
-    const oh = this.cvso.height;
+    const ow = this.originalCanvas.width;
+    const oh = this.originalCanvas.height;
     // specify the index of which dimension is longest
     let base_index = 0;
     let max_scale_rate = 0;
@@ -125,8 +125,8 @@ export default class Perspective {
     const step = 2;
     const cover_step = step * 5;
     //
-    const ctxo = this.ctxo;
-    const ctxt = this.ctxt;
+    const ctxo = this.originalContext;
+    const ctxt = this.transformedContext;
     ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
     if (base_index % 2 == 0) {
       // top or bottom side
@@ -176,10 +176,10 @@ export default class Perspective {
       }
     }
     // set a clipping path and draw the transformed image on the destination canvas.
-    this.ctxd.save();
-    this.ctxd.drawImage(ctxt.canvas, 0, 0);
-    this._applyMask(this.ctxd, q);
-    this.ctxd.restore();
+    this.destinationContext.save();
+    this.destinationContext.drawImage(ctxt.canvas, 0, 0);
+    this._applyMask(this.destinationContext, q);
+    this.destinationContext.restore();
   }
 
   private create_canvas_context(w: number, h: number) {
