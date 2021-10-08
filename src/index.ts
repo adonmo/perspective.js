@@ -30,6 +30,16 @@ interface Quadrilateral {
   bottomLeftY: number;
 }
 
+
+function createCanvasContext(width: number, height: number): CanvasRenderingContext2D {
+  const canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  return canvas.getContext("2d")!;
+}
+
+
 export default class Perspective {
   // Context for destination (output will go here)
   private readonly destinationContext: CanvasRenderingContext2D;
@@ -126,7 +136,7 @@ export default class Perspective {
     ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
     if (base_index % 2 == 0) {
       // top or bottom side
-      const ctxl = this.create_canvas_context(ow, cover_step);
+      const ctxl = createCanvasContext(ow, cover_step);
       ctxl.globalCompositeOperation = "copy";
       const cvsl = ctxl.canvas;
       for (let y = 0; y < oh; y += step) {
@@ -149,7 +159,7 @@ export default class Perspective {
       }
     } else if (base_index % 2 == 1) {
       // right or left side
-      const ctxl = this.create_canvas_context(cover_step, oh);
+      const ctxl = createCanvasContext(cover_step, oh);
       ctxl.globalCompositeOperation = "copy";
       const cvsl = ctxl.canvas;
       for (let x = 0; x < ow; x += step) {
@@ -176,14 +186,6 @@ export default class Perspective {
     this.destinationContext.drawImage(ctxt.canvas, 0, 0);
     this._applyMask(this.destinationContext, q);
     this.destinationContext.restore();
-  }
-
-  private create_canvas_context(w: number, h: number) {
-    const canvas = document.createElement("canvas");
-    canvas.width = w;
-    canvas.height = h;
-    const ctx = canvas.getContext("2d");
-    return ctx;
   }
 
   private _applyMask(ctx: CanvasRenderingContext2D, q: Quadrilateral) {
