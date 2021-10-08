@@ -132,7 +132,8 @@ export default class Perspective {
     const cvso = document.createElement("canvas");
     cvso.width = Math.round(image.width);
     cvso.height = Math.round(image.height);
-    const ctxo = cvso.getContext("2d");
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    const ctxo = cvso.getContext("2d")!;
     ctxo.drawImage(image, 0, 0, cvso.width, cvso.height);
     this.originalCanvas = cvso;
     // prepare a <canvas> for the transformed image
