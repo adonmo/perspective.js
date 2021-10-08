@@ -81,21 +81,10 @@ export default class Perspective {
 
     // compute the dimension of each side
     const dims = [
-      Math.sqrt(
-        Math.pow(topLeftX - topRightX, 2) + Math.pow(topLeftY - topRightY, 2)
-      ), // top side
-      Math.sqrt(
-        Math.pow(topRightX - bottomRightX, 2) +
-        Math.pow(topRightY - bottomRightY, 2)
-      ), // right side
-      Math.sqrt(
-        Math.pow(bottomRightX - bottomLeftX, 2) +
-        Math.pow(bottomRightY - bottomLeftY, 2)
-      ), // bottom side
-      Math.sqrt(
-        Math.pow(bottomLeftX - topLeftX, 2) +
-        Math.pow(bottomLeftY - topLeftY, 2)
-      ), // left side
+      Math.hypot(topLeftX - topRightX, topLeftY - topRightY), // top side
+      Math.hypot(topRightX - bottomRightX, topRightY - bottomRightY), // right side
+      Math.hypot(bottomRightX - bottomLeftX, bottomRightY - bottomLeftY), // bottom side
+      Math.hypot(bottomLeftX - topLeftX, bottomLeftY - topLeftY), // left side
     ];
     const { width, height } = this.originalCanvas;
     // specify the index of which dimension is longest
@@ -138,7 +127,7 @@ export default class Perspective {
         const ex = topRightX + (bottomRightX - topRightX) * r;
         const ey = topRightY + (bottomRightY - topRightY) * r;
         const ag = Math.atan((ey - sy) / (ex - sx));
-        const sc = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)) / width;
+        const sc = Math.hypot(ex - sx, ey - sy) / width;
         ctxl.setTransform(1, 0, 0, 1, 0, -y);
         ctxl.drawImage(originalCanvas, 0, 0);
         //
@@ -161,7 +150,7 @@ export default class Perspective {
         const ex = bottomLeftX + (bottomRightX - bottomLeftX) * r;
         const ey = bottomLeftY + (bottomRightY - bottomLeftY) * r;
         const ag = Math.atan((sx - ex) / (ey - sy));
-        const sc = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)) / height;
+        const sc = Math.hypot(ex - sx, ey - sy) / width;
         ctxl.setTransform(1, 0, 0, 1, -x, 0);
         ctxl.drawImage(originalCanvas, 0, 0);
         //
