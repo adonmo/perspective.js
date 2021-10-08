@@ -80,6 +80,38 @@ function drawSlice(
   targetContext.setTransform(1, 0, 0, 1, 0, 0);
 }
 
+function drawSlices(
+  originalCanvas: HTMLCanvasElement,
+  tempContext: CanvasRenderingContext2D,
+  transformedContext: CanvasRenderingContext2D,
+  isYDirection: boolean,
+  width: number,
+  height: number,
+  step: number,
+  sx0: number,
+  sx1: number,
+  sy0: number,
+  sy1: number,
+  ex0: number,
+  ex1: number,
+  ey0: number,
+  ey1: number,
+): void {
+  const extent = (isYDirection ? height : width);
+  for (let i = 0; i < extent; i += step) {
+    const r = i / extent;
+    const sx = sx0 + (sx1 - sx0) * r;
+    const sy = sy0 + (sy1 - sy0) * r;
+    const ex = ex0 + (ex1 - ex0) * r;
+    const ey = ey0 + (ey1 - ey0) * r;
+    const ag = isYDirection ? Math.atan((ey - sy) / (ex - sx)) : Math.atan((sx - ex) / (ey - sy));
+    const sc = Math.hypot(ex - sx, ey - sy) / width;
+    const tx = isYDirection ? 0 : -i;
+    const ty = isYDirection ? -i : 0;
+    drawSlice(originalCanvas, tempContext, transformedContext, tx, ty, sx, sy, ag, sc);
+  }
+}
+
 export default class Perspective {
   // Context for destination (output will go here)
   private readonly destinationContext: CanvasRenderingContext2D;
@@ -159,30 +191,12 @@ export default class Perspective {
       // top or bottom side
       const ctxl = createCanvasContext(width, cover_step);
       ctxl.globalCompositeOperation = "copy";
-      for (let y = 0; y < height; y += step) {
-        const r = y / height;
-        const sx = topLeftX + (bottomLeftX - topLeftX) * r;
-        const sy = topLeftY + (bottomLeftY - topLeftY) * r;
-        const ex = topRightX + (bottomRightX - topRightX) * r;
-        const ey = topRightY + (bottomRightY - topRightY) * r;
-        const ag = Math.atan((ey - sy) / (ex - sx));
-        const sc = Math.hypot(ex - sx, ey - sy) / width;
-        drawSlice(originalCanvas, ctxl, transformedContext, 0, -y, sx, sy, ag, sc);
-      }
+      drawSlices(originalCanvas, ctxl, transformedContext, true, width, height, step, topLeftX, bottomLeftX, topLeftY, bottomLeftY, topRightX, bottomRightX, topRightY, bottomRightY);
     } else {
       // right or left side
       const ctxl = createCanvasContext(cover_step, height);
       ctxl.globalCompositeOperation = "copy";
-      for (let x = 0; x < width; x += step) {
-        const r = x / width;
-        const sx = topLeftX + (topRightX - topLeftX) * r;
-        const sy = topLeftY + (topRightY - topLeftY) * r;
-        const ex = bottomLeftX + (bottomRightX - bottomLeftX) * r;
-        const ey = bottomLeftY + (bottomRightY - bottomLeftY) * r;
-        const ag = Math.atan((sx - ex) / (ey - sy));
-        const sc = Math.hypot(ex - sx, ey - sy) / width;
-        drawSlice(originalCanvas, ctxl, transformedContext, -x, 0, sx, sy, ag, sc);
-      }
+      drawSlices(originalCanvas, ctxl, transformedContext, false, width, height, step, topLeftX, topRightX, topLeftY, topRightY, bottomLeftX, bottomRightX, bottomLeftY, bottomRightY);
     }
     // set a clipping path and draw the transformed image on the destination canvas.
     destinationContext.save();
