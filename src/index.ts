@@ -164,17 +164,13 @@ export default class Perspective {
     let max_scale_rate = 0;
     let zero_num = 0;
     for (let i = 0; i < 4; i++) {
-      let rate = 0;
-      if (i % 2) {
-        rate = dims[i] / width;
-      } else {
-        rate = dims[i] / height;
-      }
+      const dim = dims[i];
+      const rate = i % 2 ? dim / width : dim / height;
       if (rate > max_scale_rate) {
         base_index = i;
         max_scale_rate = rate;
       }
-      if (dims[i] == 0) {
+      if (dim == 0) {
         zero_num++;
       }
     }
