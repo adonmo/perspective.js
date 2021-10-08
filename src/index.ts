@@ -138,7 +138,7 @@ export default class Perspective {
         //
         ctxt.setTransform(1, 0, 0, 1, 0, 0);
       }
-    } else if (base_index % 2 == 1) {
+    } else {
       // right or left side
       const ctxl = createCanvasContext(cover_step, height);
       ctxl.globalCompositeOperation = "copy";
