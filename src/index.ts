@@ -37,9 +37,6 @@ export default class Perspective {
   // Canvas for original image
   private readonly originalCanvas: HTMLCanvasElement;
 
-  // Context for original image
-  private readonly originalContext: CanvasRenderingContext2D;
-
   // Context for transformed image
   private readonly transformedContext: CanvasRenderingContext2D;
 
@@ -62,7 +59,6 @@ export default class Perspective {
 
     this.destinationContext = destinationContext;
     this.originalCanvas = cvso;
-    this.originalContext = ctxo;
     this.transformedContext = ctxt;
   }
 
@@ -125,7 +121,7 @@ export default class Perspective {
     const step = 2;
     const cover_step = step * 5;
     //
-    const ctxo = this.originalContext;
+    const originalCanvas = this.originalCanvas;
     const ctxt = this.transformedContext;
     ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
     if (base_index % 2 == 0) {
@@ -142,7 +138,7 @@ export default class Perspective {
         const ag = Math.atan((ey - sy) / (ex - sx));
         const sc = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)) / ow;
         ctxl.setTransform(1, 0, 0, 1, 0, -y);
-        ctxl.drawImage(ctxo.canvas, 0, 0);
+        ctxl.drawImage(originalCanvas, 0, 0);
         //
         ctxt.translate(sx, sy);
         ctxt.rotate(ag);
@@ -165,7 +161,7 @@ export default class Perspective {
         const ag = Math.atan((sx - ex) / (ey - sy));
         const sc = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)) / oh;
         ctxl.setTransform(1, 0, 0, 1, -x, 0);
-        ctxl.drawImage(ctxo.canvas, 0, 0);
+        ctxl.drawImage(originalCanvas, 0, 0);
         //
         ctxt.translate(sx, sy);
         ctxt.rotate(ag);
