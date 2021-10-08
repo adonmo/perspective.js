@@ -45,11 +45,8 @@ export default class Perspective {
 
   constructor(ctxd: CanvasRenderingContext2D, image: HTMLImageElement) {
     // check the arguments
-    if (!ctxd || !ctxd.strokeStyle) {
-      return;
-    }
-    if (!image || !image.width || !image.height) {
-      return;
+    if (!ctxd || !ctxd.strokeStyle || !image || !image.width || !image.height) {
+      throw new Error("Invalid arguments");
     }
     // prepare a <canvas> for the image
     const cvso = document.createElement("canvas");
