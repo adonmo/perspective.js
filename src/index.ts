@@ -97,9 +97,7 @@ export default class Perspective {
         Math.pow(bottomLeftY - topLeftY, 2)
       ), // left side
     ];
-    //
-    const ow = this.originalCanvas.width;
-    const oh = this.originalCanvas.height;
+    const { width, height } = this.originalCanvas;
     // specify the index of which dimension is longest
     let base_index = 0;
     let max_scale_rate = 0;
@@ -107,9 +105,9 @@ export default class Perspective {
     for (let i = 0; i < 4; i++) {
       let rate = 0;
       if (i % 2) {
-        rate = dims[i] / ow;
+        rate = dims[i] / width;
       } else {
-        rate = dims[i] / oh;
+        rate = dims[i] / height;
       }
       if (rate > max_scale_rate) {
         base_index = i;
@@ -126,22 +124,21 @@ export default class Perspective {
     const step = 2;
     const cover_step = step * 5;
     //
-    const originalCanvas = this.originalCanvas;
-    const ctxt = this.transformedContext;
+    const { originalCanvas, transformedContext: ctxt } = this;
     ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
     if (base_index % 2 == 0) {
       // top or bottom side
-      const ctxl = createCanvasContext(ow, cover_step);
+      const ctxl = createCanvasContext(width, cover_step);
       ctxl.globalCompositeOperation = "copy";
       const cvsl = ctxl.canvas;
-      for (let y = 0; y < oh; y += step) {
-        const r = y / oh;
+      for (let y = 0; y < height; y += step) {
+        const r = y / height;
         const sx = topLeftX + (bottomLeftX - topLeftX) * r;
         const sy = topLeftY + (bottomLeftY - topLeftY) * r;
         const ex = topRightX + (bottomRightX - topRightX) * r;
         const ey = topRightY + (bottomRightY - topRightY) * r;
         const ag = Math.atan((ey - sy) / (ex - sx));
-        const sc = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)) / ow;
+        const sc = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)) / width;
         ctxl.setTransform(1, 0, 0, 1, 0, -y);
         ctxl.drawImage(originalCanvas, 0, 0);
         //
@@ -154,17 +151,17 @@ export default class Perspective {
       }
     } else if (base_index % 2 == 1) {
       // right or left side
-      const ctxl = createCanvasContext(cover_step, oh);
+      const ctxl = createCanvasContext(cover_step, height);
       ctxl.globalCompositeOperation = "copy";
       const cvsl = ctxl.canvas;
-      for (let x = 0; x < ow; x += step) {
-        const r = x / ow;
+      for (let x = 0; x < width; x += step) {
+        const r = x / width;
         const sx = topLeftX + (topRightX - topLeftX) * r;
         const sy = topLeftY + (topRightY - topLeftY) * r;
         const ex = bottomLeftX + (bottomRightX - bottomLeftX) * r;
         const ey = bottomLeftY + (bottomRightY - bottomLeftY) * r;
         const ag = Math.atan((sx - ex) / (ey - sy));
-        const sc = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)) / oh;
+        const sc = Math.sqrt(Math.pow(ex - sx, 2) + Math.pow(ey - sy, 2)) / height;
         ctxl.setTransform(1, 0, 0, 1, -x, 0);
         ctxl.drawImage(originalCanvas, 0, 0);
         //
