@@ -40,6 +40,26 @@ function createCanvasContext(width: number, height: number): CanvasRenderingCont
 }
 
 
+function drawSlice(
+  originalCanvas: HTMLCanvasElement,
+  tempContext: CanvasRenderingContext2D,
+  targetContext: CanvasRenderingContext2D,
+  tx: number,
+  ty: number,
+  sx: number,
+  sy: number,
+  ag: number,
+  sc: number,
+) {
+  tempContext.setTransform(1, 0, 0, 1, tx, ty);
+  tempContext.drawImage(originalCanvas, 0, 0);
+  targetContext.translate(sx, sy);
+  targetContext.rotate(ag);
+  targetContext.scale(sc, sc);
+  targetContext.drawImage(tempContext.canvas, 0, 0);
+  targetContext.setTransform(1, 0, 0, 1, 0, 0);
+}
+
 export default class Perspective {
   // Context for destination (output will go here)
   private readonly destinationContext: CanvasRenderingContext2D;
@@ -113,13 +133,12 @@ export default class Perspective {
     const step = 2;
     const cover_step = step * 5;
     //
-    const { originalCanvas, transformedContext: ctxt } = this;
-    ctxt.clearRect(0, 0, ctxt.canvas.width, ctxt.canvas.height);
+    const { originalCanvas, transformedContext } = this;
+    transformedContext.clearRect(0, 0, transformedContext.canvas.width, transformedContext.canvas.height);
     if (base_index % 2 == 0) {
       // top or bottom side
       const ctxl = createCanvasContext(width, cover_step);
       ctxl.globalCompositeOperation = "copy";
-      const cvsl = ctxl.canvas;
       for (let y = 0; y < height; y += step) {
         const r = y / height;
         const sx = topLeftX + (bottomLeftX - topLeftX) * r;
@@ -128,21 +147,12 @@ export default class Perspective {
         const ey = topRightY + (bottomRightY - topRightY) * r;
         const ag = Math.atan((ey - sy) / (ex - sx));
         const sc = Math.hypot(ex - sx, ey - sy) / width;
-        ctxl.setTransform(1, 0, 0, 1, 0, -y);
-        ctxl.drawImage(originalCanvas, 0, 0);
-        //
-        ctxt.translate(sx, sy);
-        ctxt.rotate(ag);
-        ctxt.scale(sc, sc);
-        ctxt.drawImage(cvsl, 0, 0);
-        //
-        ctxt.setTransform(1, 0, 0, 1, 0, 0);
+        drawSlice(originalCanvas, ctxl, transformedContext, 0, -y, sx, sy, ag, sc);
       }
     } else {
       // right or left side
       const ctxl = createCanvasContext(cover_step, height);
       ctxl.globalCompositeOperation = "copy";
-      const cvsl = ctxl.canvas;
       for (let x = 0; x < width; x += step) {
         const r = x / width;
         const sx = topLeftX + (topRightX - topLeftX) * r;
@@ -151,20 +161,12 @@ export default class Perspective {
         const ey = bottomLeftY + (bottomRightY - bottomLeftY) * r;
         const ag = Math.atan((sx - ex) / (ey - sy));
         const sc = Math.hypot(ex - sx, ey - sy) / width;
-        ctxl.setTransform(1, 0, 0, 1, -x, 0);
-        ctxl.drawImage(originalCanvas, 0, 0);
-        //
-        ctxt.translate(sx, sy);
-        ctxt.rotate(ag);
-        ctxt.scale(sc, sc);
-        ctxt.drawImage(cvsl, 0, 0);
-        //
-        ctxt.setTransform(1, 0, 0, 1, 0, 0);
+        drawSlice(originalCanvas, ctxl, transformedContext, -x, 0, sx, sy, ag, sc);
       }
     }
     // set a clipping path and draw the transformed image on the destination canvas.
     this.destinationContext.save();
-    this.destinationContext.drawImage(ctxt.canvas, 0, 0);
+    this.destinationContext.drawImage(transformedContext.canvas, 0, 0);
     this._applyMask(this.destinationContext, q);
     this.destinationContext.restore();
   }
