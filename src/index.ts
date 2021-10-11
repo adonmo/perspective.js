@@ -1,6 +1,8 @@
 /*!
-Copyright 2021 Adonmo  https://www.adonmo.com/
-Copyright 2010 futomi  http://www.html5.jp/
+Copyright 2010 futomi <http://www.html5.jp/>
+Copyright 2014 Fabien LOISON <http://www.flozz.fr/>
+Copyright 2021 Adonmo <https://www.adonmo.com/>
+Copyright 2021 Aarni Koskela <https://github.com/akx>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -13,10 +15,6 @@ distributed under the License is distributed on an "AS IS" BASIS,
 WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 See the License for the specific language governing permissions and
 limitations under the License.
-
-This file was modified by Fabien LOISON <http://www.flozz.fr/>
-
-This file was further modified by Adonmo https://www.adonmo.com/
 */
 
 export interface Quadrilateral {
