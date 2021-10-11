@@ -137,7 +137,8 @@ export default class Perspective {
     ctxo.drawImage(image, 0, 0, cvso.width, cvso.height);
     this.originalCanvas = cvso;
     // prepare a <canvas> for the transformed image
-    this.transformedContext = createCanvasContext(destinationContext.canvas.width, destinationContext.canvas.height);
+    const destinationCanvas = destinationContext.canvas;
+    this.transformedContext = createCanvasContext(destinationCanvas.width, destinationCanvas.height);
   }
 
   public draw(q: Quadrilateral, step = 2): void {
@@ -180,7 +181,8 @@ export default class Perspective {
     }
     const coverStep = step * 5;
     const { originalCanvas, transformedContext, destinationContext } = this;
-    transformedContext.clearRect(0, 0, transformedContext.canvas.width, transformedContext.canvas.height);
+    const transformedCanvas = transformedContext.canvas;
+    transformedContext.clearRect(0, 0, transformedCanvas.width, transformedCanvas.height);
     if (base_index % 2 == 0) {
       // top or bottom side
       const ctxl = createCanvasContext(width, coverStep);
@@ -194,7 +196,7 @@ export default class Perspective {
     }
     // set a clipping path and draw the transformed image on the destination canvas.
     destinationContext.save();
-    destinationContext.drawImage(transformedContext.canvas, 0, 0);
+    destinationContext.drawImage(transformedCanvas, 0, 0);
     applyMask(destinationContext, q);
     destinationContext.restore();
   }
