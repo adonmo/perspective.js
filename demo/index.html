@@ -1,33 +1,21 @@
 <!DOCTYPE html>
-
 <html>
   <head>
     <title>Perspective.ts demo</title>
+    <link rel="stylesheet" href="demo.css" />
   </head>
 
   <body>
-    <canvas id="canvas"></canvas>
+    <h1>Perspective.ts demo</h1>
+    <p>Drag the handles below to warp the image's perspective.</p>
+    <div id="wrapper">
+      <canvas id="canvas"></canvas>
+      <div class="handle" id="tl"></div>
+      <div class="handle" id="tr"></div>
+      <div class="handle" id="bl"></div>
+      <div class="handle" id="br"></div>
+    </div>
     <script src="../dist/perspectivets.min.js"></script>
-    <script>
-      var canvas = document.getElementById("canvas");
-      var image = new Image();
-      image.onload = function () {
-        canvas.width = image.width;
-        canvas.height = image.height;
-        var ctx = canvas.getContext("2d");
-        var p = new Perspective(ctx, image);
-        p.draw({
-          topLeftX: 30,
-          topLeftY: 30,
-          topRightX: image.width - 50,
-          topRightY: 50,
-          bottomRightX: image.width - 70,
-          bottomRightY: image.height - 30,
-          bottomLeftX: 10,
-          bottomLeftY: image.height,
-        });
-      };
-      image.src = "firefox.jpg";
-    </script>
+    <script src="./demo.js"></script>
   </body>
 </html>

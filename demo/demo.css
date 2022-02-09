@@ -1,0 +1,29 @@
+body {
+  font: 12pt sans-serif;
+}
+
+#wrapper {
+  position: relative;
+}
+
+.handle {
+  position: absolute;
+  background: rgba(0, 0, 0, 30%);
+  width: 20px;
+  height: 20px;
+  transform: translate(-50%, -50%);
+  border-radius: 100%;
+  border: 1px solid black;
+  cursor: move;
+  user-select: none;
+}
+.handle:hover {
+  border-color: goldenrod;
+  border-width: 2px;
+  background: rgba(0, 0, 0, 80%);
+}
+
+canvas {
+  position: absolute;
+  border: 1px dashed silver;
+}

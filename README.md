@@ -1,10 +1,10 @@
 # perspective.ts
+
 ![npm](https://img.shields.io/npm/v/perspectivets) ![npm type definitions](https://img.shields.io/npm/types/typescript) ![GitHub](https://img.shields.io/github/license/adonmo/perspective.ts)
 
 **perspective.ts** is a TypeScript library which allow you to transform a rectangle image into an arbitrary form of quadrilateral on a canvas element. It is used to draw an image using perspective on a canvas.
 
 **perspective.ts** is a fork of [**perspective.js**](https://github.com/wanadev/perspective.js), which is itself a derivative work of the original [Futomi Hatano's **perspective.js**](http://www.html5.jp/test/perspective_canvas/demo1_en.html)
-
 
 ## Codesandbox demo
 
@@ -68,7 +68,10 @@ And then open http://localhost:8080/demo/ in your browser.
 
 ## License
 
-    Copyright 2010 futomi  http://www.html5.jp/
+    Copyright 2010 futomi <http://www.html5.jp/>
+    Copyright 2014 Fabien LOISON <http://www.flozz.fr/>
+    Copyright 2021 Adonmo <https://www.adonmo.com/>
+    Copyright 2021 Aarni Koskela <https://github.com/akx>
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.
